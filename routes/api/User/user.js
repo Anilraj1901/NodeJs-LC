@@ -1,5 +1,5 @@
 // routes/api/Users/user.js
-const Users = require('../../../schema/user');
+const { Users } = require('../../../schema/user');
 const logger = require('../../../logs/logger');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');

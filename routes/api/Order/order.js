@@ -1,4 +1,4 @@
-const Orders = require('../../../schema/order');
+const { Orders } = require('../../../schema/order');
 const logger = require('../../../logs/logger');
 const moment = require('moment');
 
@@ -12,7 +12,7 @@ exports.create = async function (req, res) {
 			return res.status(400).send({ success: false, message: 'Fields left empty' });
 		}
 
-		if (!['Cart', 'Orderd' ].includes(status)) {
+		if (!['Cart', 'Orderd'].includes(status)) {
 			return res.status(400).send({ success: false, message: 'Invalid status. Allowed values are "Cart" and "Orderd".' });
 		}
 
@@ -41,7 +41,7 @@ exports.create = async function (req, res) {
 			await newOrder.save();
 		}
 
-		if(status == 'Orderd'){
+		if (status == 'Orderd') {
 			Object.assign(Product, { quantity: Number(Product.quantity) - Number(quantity) });
 			await Product.save();
 		}
