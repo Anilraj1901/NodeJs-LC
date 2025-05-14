@@ -1,8 +1,9 @@
 // routes/api/Users/user.js
-const { Users } = require('../../../schema/user');
+const Users = require('../../../schema/user');
 const logger = require('../../../logs/logger');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const security = require('../../../config/security.json');
 
 exports.create = async function (req, res) {
 	try {
@@ -24,7 +25,7 @@ exports.create = async function (req, res) {
 
 		const adminUser = await Users.findOne({ userRole: 'Admin' });
 
-		if (adminUser) {
+		if (adminUser && adminUser.userRole == userRole) {
 			return res.status(400).send({ success: false, message: 'Admin user already exists' });
 		}
 
@@ -44,7 +45,6 @@ exports.create = async function (req, res) {
 		return res.status(500).send({ success: false, error: 'Error in processing your request.' });
 	}
 };
-
 
 exports.login = async function (req, res) {
 	try {
@@ -67,7 +67,7 @@ exports.login = async function (req, res) {
 		}
 
 		// Generate JWT
-		let token = jwt.sign({ id: User.id, userRole: User.userRole, userName: User.userName }, 'secretKey', { expiresIn: '8h' });
+		let token = jwt.sign({ id: User.id, userRole: User.userRole, userName: User.userName }, security.sessionToken, { expiresIn: '8h' });
 
 		return res.status(201).send({ success: true, message: token });
 

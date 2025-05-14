@@ -1,4 +1,4 @@
-const { Products } = require('../../../schema/product');
+const Products  = require('../../../schema/product');
 const logger = require('../../../logs/logger');
 const moment = require('moment');
 
