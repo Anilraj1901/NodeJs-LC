@@ -1,6 +1,7 @@
-const Products  = require('../../../schema/product');
+const { Products } = require('../../../schema/product');
 const logger = require('../../../logs/logger');
 const moment = require('moment');
+const upload = require('../../../config/upload');
 
 exports.create = async function (req, res) {
 	try {
@@ -31,6 +32,21 @@ exports.create = async function (req, res) {
 		const newProduct = new Products({ name, price, quantity, category, gst, expDate, year, brand, model, priceHistory });
 		
 		await newProduct.save();
+
+		let images = (req.files) ? req.files.filter(files => {
+			return files;
+		}) : [];
+		let imagePaths = [];
+
+		if (images && images.length) {
+			imagePaths = images.map(obj => {
+				let s3Path = '/' + newProduct._id + '/products/' + new Date().getFullYear() + '_' + obj.filename;
+				upload.s3FileUploader({ file: obj.path, s3Path: s3Path })
+				return s3Path;
+			});
+		} 
+
+		console.log(newProduct)
 
 		return res.status(201).send({ success: true, message: 'Product created successfully' });
 
