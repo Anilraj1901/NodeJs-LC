@@ -37,6 +37,9 @@ const ProductSchema = new mongoose.Schema({
 	priceHistory: {
 		type: JSON,
 		required: true
+	},
+	images: {
+		type: JSON,
 	}
 });
 

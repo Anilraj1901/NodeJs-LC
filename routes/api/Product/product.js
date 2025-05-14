@@ -44,9 +44,10 @@ exports.create = async function (req, res) {
 				upload.s3FileUploader({ file: obj.path, s3Path: s3Path })
 				return s3Path;
 			});
-		} 
+			Object.assign(newProduct, { images: imagePaths });
 
-		console.log(newProduct)
+			await newProduct.save();
+		} 
 
 		return res.status(201).send({ success: true, message: 'Product created successfully' });
 
