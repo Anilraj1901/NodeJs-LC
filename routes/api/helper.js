@@ -47,7 +47,7 @@ exports.validateUserToken = async function (req, res, next) {
 // Image Upload
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, '.temp')
+		cb(null, './temp')
 	},
 	filename: function (req, file, cb) {
 		var name = file.originalname;
