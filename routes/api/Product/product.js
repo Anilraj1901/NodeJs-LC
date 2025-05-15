@@ -13,11 +13,6 @@ exports.create = async function (req, res) {
 			return res.status(400).send({ success: false, message: 'Fields left empty' });
 		}
 
-		let validation = validateProductData(req.body);
-		if (!validation.valid) {
-			return res.status(400).send({ success: false, message: validation.message });
-		}
-
 		const existingProduct = await Products.findOne({ name: name, year: year });
 
 		if (existingProduct) {
@@ -104,11 +99,6 @@ exports.update = async function (req, res) {
 			return res.status(400).send({ success: false, message: 'Input parameter missing' });
 		}
 
-		let validation = validateProductData(req.body);
-		if (!validation.valid) {
-			return res.status(400).send({ success: false, message: validation.message });
-		}
-
 		let Product = await Products.findById(req.params.id);
 
 		if (!Product) {
@@ -155,28 +145,4 @@ exports.delete = async function (req, res) {
 		logger.RaiseLogEvent('api/products/delete', 'error', err, `Data ${JSON.stringify(req.params.id)}`);
 		return res.send({ success: false, message: 'Error fetching product' });
 	}
-}
-
-function validateProductData(data) {
-	if (!data.name || typeof data.name !== 'string') {
-		return { valid: false, message: 'Product name is required and should be a string.' };
-	}
-
-	if (!data.price || typeof data.price !== 'number' || data.price <= 0) {
-		return { valid: false, message: 'Price is required and should be a positive number.' };
-	}
-
-	if (!data.quantity || typeof data.quantity !== 'number' || data.quantity < 0) {
-		return { valid: false, message: 'Quantity is required and should be a non-negative number.' };
-	}
-
-	if (!data.category || typeof data.category !== 'string') {
-		return { valid: false, message: 'Category is required and should be a string.' };
-	}
-
-	if (data.gst && typeof data.gst !== 'string' && data.gst.length >= 16) {
-		return { valid: false, message: 'GST should be a string.' };
-	}
-
-	return { valid: true, message: 'Product data is valid.' };
 }
